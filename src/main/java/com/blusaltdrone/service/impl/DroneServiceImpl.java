@@ -3,6 +3,8 @@ package com.blusaltdrone.service.impl;
 import com.blusaltdrone.dtos.request.DroneRequestDto;
 import com.blusaltdrone.dtos.request.MedicationRequestDto;
 import com.blusaltdrone.enums.DroneState;
+import com.blusaltdrone.exceptions.BadRequestException;
+import com.blusaltdrone.exceptions.ResourceNotFoundException;
 import com.blusaltdrone.mapper.DroneMapper;
 import com.blusaltdrone.mapper.MedicationMapper;
 import com.blusaltdrone.model.Drone;
@@ -35,7 +37,7 @@ public class DroneServiceImpl implements DroneService {
     @Override
     public Drone loadDrone(Long droneId, List<MedicationRequestDto> medications) {
         Drone drone = droneRepository.findById(droneId)
-                .orElseThrow(() -> new IllegalArgumentException(" "));
+                .orElseThrow(() -> new ResourceNotFoundException("Drone not found"));
 
         Utils.doDroneCheck(drone);
 
@@ -45,7 +47,7 @@ public class DroneServiceImpl implements DroneService {
         }
 
         if (totalWeight > drone.getWeightLimit()) {
-            throw new IllegalArgumentException(" ");
+            throw new BadRequestException("Drone weight limit exceeded");
         }
 
         List<Medication> medicationList = new ArrayList<>();
@@ -63,7 +65,7 @@ public class DroneServiceImpl implements DroneService {
     @Override
     public List<Medication> getLoadedMedications(Long droneId) {
         Drone drone = droneRepository.findById(droneId)
-                .orElseThrow(() -> new IllegalArgumentException(" "));
+                .orElseThrow(() -> new ResourceNotFoundException("Drone not found"));
         return drone.getMedications();
     }
 
@@ -82,7 +84,7 @@ public class DroneServiceImpl implements DroneService {
     public int getBatteryLevel(Long droneId) {
         return droneRepository.findById(droneId)
                 .map(Drone::getBatteryCapacity)
-                .orElseThrow(() -> new IllegalArgumentException(" "));
+                .orElseThrow(() -> new ResourceNotFoundException("Battery limit exceeded"));
     }
 
 
