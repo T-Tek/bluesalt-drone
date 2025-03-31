@@ -1,13 +1,16 @@
 package com.blusaltdrone.utils;
 
+import com.blusaltdrone.dtos.response.Response;
 import com.blusaltdrone.enums.DroneState;
+import com.blusaltdrone.enums.ResponseCodeAndMessage;
 import com.blusaltdrone.model.Drone;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 
 @UtilityClass
 @Slf4j
-public class DroneUtils {
+public class Utils {
 
     public void doDroneCheck(Drone drone){
         if (drone.getBatteryCapacity() < 25) {
@@ -18,8 +21,8 @@ public class DroneUtils {
         }
     }
 
-    private void logBatteryLevel(Drone drone) {
-        log.info("Drone {} battery level: {}%",
-                drone.getSerialNumber(), drone.getBatteryCapacity());
+    public static ResponseEntity<Response> getResponse(ResponseCodeAndMessage responseCodeAndMessage, Object data) {
+        Response response = new Response(responseCodeAndMessage.status.value(), responseCodeAndMessage.name(), data);
+        return new ResponseEntity<>(response, responseCodeAndMessage.status);
     }
 }

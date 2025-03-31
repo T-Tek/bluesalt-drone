@@ -9,7 +9,7 @@ import com.blusaltdrone.model.Drone;
 import com.blusaltdrone.model.Medication;
 import com.blusaltdrone.repository.DroneRepository;
 import com.blusaltdrone.service.DroneService;
-import com.blusaltdrone.utils.DroneUtils;
+import com.blusaltdrone.utils.Utils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class DroneServiceImpl implements DroneService {
         Drone drone = droneRepository.findById(droneId)
                 .orElseThrow(() -> new IllegalArgumentException(" "));
 
-        DroneUtils.doDroneCheck(drone);
+        Utils.doDroneCheck(drone);
 
         int totalWeight = 0;
         for (MedicationRequestDto medication : medications) {
