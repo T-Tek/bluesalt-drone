@@ -1,4 +1,4 @@
-package com.blusaltdrone.dtos;
+package com.blusaltdrone.dtos.request;
 
 import com.blusaltdrone.enums.DroneModel;
 import com.blusaltdrone.enums.DroneState;

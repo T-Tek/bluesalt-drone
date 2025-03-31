@@ -1,6 +1,6 @@
 package com.blusaltdrone.mapper;
 
-import com.blusaltdrone.dtos.DroneRequestDto;
+import com.blusaltdrone.dtos.request.DroneRequestDto;
 import com.blusaltdrone.model.Drone;
 
 public class DroneMapper {

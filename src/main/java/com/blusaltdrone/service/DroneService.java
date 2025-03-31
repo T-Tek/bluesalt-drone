@@ -1,7 +1,7 @@
 package com.blusaltdrone.service;
 
-import com.blusaltdrone.dtos.DroneRequestDto;
-import com.blusaltdrone.dtos.MedicationRequestDto;
+import com.blusaltdrone.dtos.request.DroneRequestDto;
+import com.blusaltdrone.dtos.request.MedicationRequestDto;
 import com.blusaltdrone.model.Drone;
 import com.blusaltdrone.model.Medication;
 import jakarta.transaction.Transactional;
@@ -21,6 +21,8 @@ public interface DroneService {
     List<Medication> getLoadedMedications(Long droneId);
 
     List<Drone> getAvailableDrones();
+
+    List<Drone> getDrones();
 
     int getBatteryLevel(Long droneId);
 }

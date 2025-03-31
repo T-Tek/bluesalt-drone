@@ -1,6 +1,6 @@
 package com.blusaltdrone.mapper;
 
-import com.blusaltdrone.dtos.MedicationRequestDto;
+import com.blusaltdrone.dtos.request.MedicationRequestDto;
 import com.blusaltdrone.model.Medication;
 
 public class MedicationMapper {

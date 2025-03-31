@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BatteryLog {
+public class BatteryAuditLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,5 +22,6 @@ public class BatteryLog {
     private Drone drone;
 
     private int batteryLevel;
+
     private LocalDateTime timestamp;
 }

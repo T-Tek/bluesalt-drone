@@ -1,7 +1,7 @@
 package com.blusaltdrone.service.impl;
 
-import com.blusaltdrone.dtos.DroneRequestDto;
-import com.blusaltdrone.dtos.MedicationRequestDto;
+import com.blusaltdrone.dtos.request.DroneRequestDto;
+import com.blusaltdrone.dtos.request.MedicationRequestDto;
 import com.blusaltdrone.enums.DroneState;
 import com.blusaltdrone.mapper.DroneMapper;
 import com.blusaltdrone.mapper.MedicationMapper;
@@ -13,7 +13,6 @@ import com.blusaltdrone.utils.DroneUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -75,21 +74,18 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
+    public List<Drone> getDrones() {
+        return droneRepository.findAll();
+    }
+
+    @Override
     public int getBatteryLevel(Long droneId) {
         return droneRepository.findById(droneId)
                 .map(Drone::getBatteryCapacity)
                 .orElseThrow(() -> new IllegalArgumentException(" "));
     }
 
-    @Scheduled(fixedRate = 3600000)
-    public void checkBatteryLevels() {
-        log.info("Getting battery levels");
 
-        List<Drone> drones = droneRepository.findAll();
-        for (Drone drone : drones) {
-
-        }
-    }
 
 
 }
