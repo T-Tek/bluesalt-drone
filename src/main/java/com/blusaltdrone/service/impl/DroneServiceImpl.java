@@ -29,13 +29,19 @@ public class DroneServiceImpl implements DroneService {
     @Transactional
     @Override
     public Drone registerDrone(DroneRequestDto droneRequest) {
+        log.info("Attempting to register new drone with serial number: {}", droneRequest.getSerialNumber());
+
         Drone drone = DroneMapper.toDrone(droneRequest);
-        return droneRepository.save(drone);
+        Drone savedDrone = droneRepository.save(drone);
+        log.info("Successfully registered drone with ID: {}", savedDrone.getId());
+        return savedDrone;
     }
 
     @Transactional
     @Override
     public Drone loadDrone(Long droneId, List<MedicationRequestDto> medications) {
+        log.info("Loading drone with ID: {} with {} medications", droneId, medications.size());
+
         Drone drone = droneRepository.findById(droneId)
                 .orElseThrow(() -> new ResourceNotFoundException("Drone not found"));
 
@@ -64,6 +70,8 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public List<Medication> getLoadedMedications(Long droneId) {
+        log.info("Fetching loaded medications for drone ID: {}", droneId);
+
         Drone drone = droneRepository.findById(droneId)
                 .orElseThrow(() -> new ResourceNotFoundException("Drone not found"));
         return drone.getMedications();
@@ -71,23 +79,25 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public List<Drone> getAvailableDrones() {
+        log.info("Fetching available drones in IDLE state with battery of 25%)");
+
         return droneRepository.findByStateAndBatteryCapacityGreaterThanEqual(
                 DroneState.IDLE, 25);
     }
 
     @Override
     public List<Drone> getDrones() {
+        log.info("Fetching all drones");
+
         return droneRepository.findAll();
     }
 
     @Override
     public int getBatteryLevel(Long droneId) {
+        log.info("Fetching battery level for drone ID: {}", droneId);
+
         return droneRepository.findById(droneId)
                 .map(Drone::getBatteryCapacity)
                 .orElseThrow(() -> new ResourceNotFoundException("Battery limit exceeded"));
     }
-
-
-
-
 }
