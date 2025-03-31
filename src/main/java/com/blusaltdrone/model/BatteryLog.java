@@ -1,6 +1,5 @@
-package com.blusalt.drone.model;
+package com.blusaltdrone.model;
 
-import com.blusaltdrone.model.Drone;
 import jakarta.persistence.*;
 import lombok.*;
 
