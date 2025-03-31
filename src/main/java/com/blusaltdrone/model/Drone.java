@@ -5,6 +5,8 @@ import com.blusaltdrone.enums.DroneState;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -26,4 +28,7 @@ public class Drone {
 
     @Enumerated(EnumType.STRING)
     private DroneState state;
+
+    @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL)
+    private List<Medication> medications;
 }
