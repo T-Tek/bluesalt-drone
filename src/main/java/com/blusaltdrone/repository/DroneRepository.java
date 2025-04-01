@@ -2,6 +2,8 @@ package com.blusaltdrone.repository;
 
 import com.blusaltdrone.enums.DroneState;
 import com.blusaltdrone.model.Drone;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,4 +14,5 @@ public interface DroneRepository extends JpaRepository<Drone, Long> {
     List<Drone> findByState(DroneState state);
 
     List<Drone> findByStateAndBatteryCapacityGreaterThanEqual(DroneState droneState, int i);
+    Page<Drone> findAll(Pageable pageable);
 }

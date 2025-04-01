@@ -2,6 +2,7 @@ package com.blusaltdrone.service.impl;
 
 import com.blusaltdrone.dtos.request.DroneRequestDto;
 import com.blusaltdrone.dtos.request.MedicationRequestDto;
+import com.blusaltdrone.dtos.response.PageResponse;
 import com.blusaltdrone.enums.DroneState;
 import com.blusaltdrone.exceptions.BadRequestException;
 import com.blusaltdrone.exceptions.ResourceNotFoundException;
@@ -15,6 +16,10 @@ import com.blusaltdrone.utils.Utils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -86,10 +91,20 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public List<Drone> getDrones() {
+    public PageResponse<List<Drone>> getDrones(int pageNo, int pageSize) {
         log.info("Fetching all drones");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
-        return droneRepository.findAll();
+        Page<Drone> dronePage = droneRepository.findAll(pageable);
+        if (dronePage.isEmpty()) {
+            throw new ResourceNotFoundException("No drones found");
+        }
+        return new PageResponse<>(
+                dronePage.getNumber(),
+                dronePage.getTotalPages(),
+                dronePage.hasNext(),
+                dronePage.getContent());
+
     }
 
     @Override

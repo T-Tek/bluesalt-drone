@@ -2,6 +2,7 @@ package com.blusaltdrone.controller;
 
 import com.blusaltdrone.dtos.request.DroneRequestDto;
 import com.blusaltdrone.dtos.request.MedicationRequestDto;
+import com.blusaltdrone.dtos.response.PageResponse;
 import com.blusaltdrone.dtos.response.Response;
 import com.blusaltdrone.enums.ResponseCodeAndMessage;
 import com.blusaltdrone.model.Drone;
@@ -49,5 +50,11 @@ public class DispatchController {
     public ResponseEntity<Response> getBatteryLevel(@PathVariable Long id) {
         int batteryLevel = droneService.getBatteryLevel(id);
         return Utils.getResponse(ResponseCodeAndMessage.SUCCESS, batteryLevel);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Response> getAll(@RequestParam int pageNo, @RequestParam int pageSize) {
+        PageResponse<List<Drone>> drones = droneService.getDrones(pageNo, pageSize);
+        return Utils.getResponse(ResponseCodeAndMessage.SUCCESS, drones);
     }
 }

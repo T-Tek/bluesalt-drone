@@ -2,6 +2,7 @@ package com.blusaltdrone.service;
 
 import com.blusaltdrone.dtos.request.DroneRequestDto;
 import com.blusaltdrone.dtos.request.MedicationRequestDto;
+import com.blusaltdrone.dtos.response.PageResponse;
 import com.blusaltdrone.model.Drone;
 import com.blusaltdrone.model.Medication;
 import jakarta.transaction.Transactional;
@@ -22,7 +23,7 @@ public interface DroneService {
 
     List<Drone> getAvailableDrones();
 
-    List<Drone> getDrones();
+    PageResponse<List<Drone>> getDrones(int pageNo, int pageSize);
 
     int getBatteryLevel(Long droneId);
 }
