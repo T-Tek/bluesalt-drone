@@ -21,7 +21,7 @@ public interface DroneService {
 
     List<Medication> getLoadedMedications(Long droneId);
 
-    List<Drone> getAvailableDrones();
+    PageResponse<List<Drone>> getAvailableDrones(int pageNo, int pageSize);
 
     PageResponse<List<Drone>> getDrones(int pageNo, int pageSize);
 

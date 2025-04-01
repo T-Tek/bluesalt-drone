@@ -13,6 +13,6 @@ public interface DroneRepository extends JpaRepository<Drone, Long> {
     Optional<Drone> findBySerialNumber(String serialNumber);
     List<Drone> findByState(DroneState state);
 
-    List<Drone> findByStateAndBatteryCapacityGreaterThanEqual(DroneState droneState, int i);
+    Page<Drone> findByStateAndBatteryCapacityGreaterThanEqual(DroneState droneState, int i, Pageable pageable);
     Page<Drone> findAll(Pageable pageable);
 }

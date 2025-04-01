@@ -41,8 +41,8 @@ public class DispatchController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<Response> getAvailableDrones() {
-        List<Drone> drones = droneService.getAvailableDrones();
+    public ResponseEntity<Response> getAvailableDrones(@RequestParam int pageNo, @RequestParam int pageSize) {
+        PageResponse<List<Drone>> drones = droneService.getAvailableDrones(pageNo, pageSize);
         return Utils.getResponse(ResponseCodeAndMessage.SUCCESS, drones);
     }
 

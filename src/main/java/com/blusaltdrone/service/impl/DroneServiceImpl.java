@@ -83,11 +83,12 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public List<Drone> getAvailableDrones() {
+    public  PageResponse<List<Drone>> getAvailableDrones(int pageNo, int pageSize) {
         log.info("Fetching available drones in IDLE state with battery of 25%)");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
-        return droneRepository.findByStateAndBatteryCapacityGreaterThanEqual(
-                DroneState.IDLE, 25);
+        Page<Drone> dronePage = droneRepository.findByStateAndBatteryCapacityGreaterThanEqual(DroneState.IDLE, 25, pageable);
+        return getDronePageResponse(dronePage);
     }
 
     @Override
@@ -96,15 +97,7 @@ public class DroneServiceImpl implements DroneService {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
         Page<Drone> dronePage = droneRepository.findAll(pageable);
-        if (dronePage.isEmpty()) {
-            throw new ResourceNotFoundException("No drones found");
-        }
-        return new PageResponse<>(
-                dronePage.getNumber(),
-                dronePage.getTotalPages(),
-                dronePage.hasNext(),
-                dronePage.getContent());
-
+        return getDronePageResponse(dronePage);
     }
 
     @Override
@@ -114,5 +107,17 @@ public class DroneServiceImpl implements DroneService {
         return droneRepository.findById(droneId)
                 .map(Drone::getBatteryCapacity)
                 .orElseThrow(() -> new ResourceNotFoundException("Battery limit exceeded"));
+    }
+
+    private PageResponse<List<Drone>> getDronePageResponse(Page<Drone> dronePage) {
+
+        if (dronePage.isEmpty()) {
+            throw new ResourceNotFoundException("No drones found");
+        }
+        return new PageResponse<>(
+                dronePage.getNumber(),
+                dronePage.getTotalPages(),
+                dronePage.hasNext(),
+                dronePage.getContent());
     }
 }
