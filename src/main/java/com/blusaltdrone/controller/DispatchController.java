@@ -36,7 +36,7 @@ public class DispatchController {
     }
 
     @PostMapping("/{id}/load")
-    @Operation(summary = "Load medications onto drone")
+    @Operation(summary = "Load medications on drone")
     @ApiResponse(responseCode = "200", description = "Success")
     @ApiResponse(responseCode = "400", description = "Invalid input")
     @ApiResponse(responseCode = "404", description = "Drone not found")
