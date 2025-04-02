@@ -31,6 +31,11 @@ import java.util.List;
 public class DroneServiceImpl implements DroneService {
     private final DroneRepository droneRepository;
 
+    /**
+     * Registers a new drone.
+     * @param droneRequest drone registration data
+     * @return registered drone entity
+     */
     @Transactional
     @Override
     public Drone registerDrone(DroneRequestDto droneRequest) {
@@ -42,6 +47,13 @@ public class DroneServiceImpl implements DroneService {
         return savedDrone;
     }
 
+    /**
+     * Loads medications onto a drone.
+     * @param droneId target drone ID
+     * @param medications list of medications to load
+     * @return updated drone entity
+     * @throws BadRequestException if weight limit exceeded
+     */
     @Transactional
     @Override
     public Drone loadDrone(Long droneId, List<MedicationRequestDto> medications) {
@@ -73,6 +85,11 @@ public class DroneServiceImpl implements DroneService {
         return droneRepository.save(drone);
     }
 
+    /**
+     * Gets medications loaded on a drone.
+     * @param droneId target drone ID
+     * @return list of loaded medications
+     */
     @Override
     public List<Medication> getLoadedMedications(Long droneId) {
         log.info("Fetching loaded medications for drone ID: {}", droneId);
@@ -82,6 +99,12 @@ public class DroneServiceImpl implements DroneService {
         return drone.getMedications();
     }
 
+    /**
+     * Gets available drones (IDLE state with ≥25% battery).
+     * @param pageNo pagination page number
+     * @param pageSize items per page
+     * @return paginated response of available drones
+     */
     @Override
     public  PageResponse<List<Drone>> getAvailableDrones(int pageNo, int pageSize) {
         log.info("Fetching available drones in IDLE state with battery of 25%)");
@@ -91,6 +114,12 @@ public class DroneServiceImpl implements DroneService {
         return getDronePageResponse(dronePage);
     }
 
+    /**
+     * Gets all drones with pagination.
+     * @param pageNo pagination page number
+     * @param pageSize items per page
+     * @return paginated response of all drones
+     */
     @Override
     public PageResponse<List<Drone>> getDrones(int pageNo, int pageSize) {
         log.info("Fetching all drones");
@@ -100,6 +129,12 @@ public class DroneServiceImpl implements DroneService {
         return getDronePageResponse(dronePage);
     }
 
+
+    /**
+     * Gets battery level for a drone.
+     * @param droneId target drone ID
+     * @return current battery percentage
+     */
     @Override
     public int getBatteryLevel(Long droneId) {
         log.info("Fetching battery level for drone ID: {}", droneId);
@@ -109,6 +144,12 @@ public class DroneServiceImpl implements DroneService {
                 .orElseThrow(() -> new ResourceNotFoundException("Battery limit exceeded"));
     }
 
+    /**
+     * Creates paginated response for drone queries.
+     * @param dronePage page of drone results
+     * @return formatted page response
+     * @throws ResourceNotFoundException if no drones found
+     */
     private PageResponse<List<Drone>> getDronePageResponse(Page<Drone> dronePage) {
 
         if (dronePage.isEmpty()) {
