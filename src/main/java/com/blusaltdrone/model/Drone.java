@@ -29,6 +29,6 @@ public class Drone {
     @Enumerated(EnumType.STRING)
     private DroneState state;
 
-    @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Medication> medications;
 }

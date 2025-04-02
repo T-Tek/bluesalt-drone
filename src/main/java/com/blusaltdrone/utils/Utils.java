@@ -4,6 +4,7 @@ import com.blusaltdrone.dtos.response.PageResponse;
 import com.blusaltdrone.dtos.response.Response;
 import com.blusaltdrone.enums.DroneState;
 import com.blusaltdrone.enums.ResponseCodeAndMessage;
+import com.blusaltdrone.exceptions.BadRequestException;
 import com.blusaltdrone.exceptions.ResourceNotFoundException;
 import com.blusaltdrone.model.Drone;
 import lombok.experimental.UtilityClass;
@@ -22,15 +23,20 @@ public class Utils {
 
     public void doDroneCheck(Drone drone) {
         if (drone.getBatteryCapacity() < 25) {
-            throw new IllegalStateException("Drone battery too low to load medications");
+            throw new BadRequestException("Drone battery too low to load medications");
         }
         if (drone.getState() != DroneState.IDLE) {
-            throw new IllegalStateException("Drone is not in an IDLE state");
+            throw new BadRequestException("Drone is not in an IDLE state");
         }
     }
 
     public ResponseEntity<Response> getResponse(ResponseCodeAndMessage responseCodeAndMessage, Object data) {
         Response response = new Response(responseCodeAndMessage.status.value(), responseCodeAndMessage.name(), data);
+        log.info("Response---->\nStatus: {}\nMessage: {}\nData: {}",
+                responseCodeAndMessage.status,
+                responseCodeAndMessage.name(),
+                data);
+
         return new ResponseEntity<>(response, responseCodeAndMessage.status);
     }
 }
