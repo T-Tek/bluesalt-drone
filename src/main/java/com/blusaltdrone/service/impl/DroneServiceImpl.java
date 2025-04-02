@@ -115,7 +115,7 @@ public class DroneServiceImpl implements DroneService {
             throw new ResourceNotFoundException("No drones found");
         }
         return new PageResponse<>(
-                dronePage.getNumber(),
+                dronePage.getNumberOfElements(),
                 dronePage.getTotalPages(),
                 dronePage.hasNext(),
                 dronePage.getContent());
