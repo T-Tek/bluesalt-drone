@@ -16,6 +16,9 @@ import com.blusaltdrone.utils.Utils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +42,7 @@ public class DroneServiceImpl implements DroneService {
     @Transactional
     @Override
     public Drone registerDrone(DroneRequestDto droneRequest) {
-        log.info("Attempting to register new drone with serial number: {}", droneRequest.getSerialNumber());
+        log.info("Registering a new drone with serial number: {}", droneRequest.getSerialNumber());
 
         Drone drone = DroneMapper.toDrone(droneRequest);
         Drone savedDrone = droneRepository.save(drone);
@@ -56,6 +59,11 @@ public class DroneServiceImpl implements DroneService {
      */
     @Transactional
     @Override
+    //here wee are clearing the relevant caches on update
+    @Caching(evict = {
+            @CacheEvict(value = "drones", allEntries = true),
+            @CacheEvict(value = "battery", key = "#droneId")
+    })
     public Drone loadDrone(Long droneId, List<MedicationRequestDto> medications) {
         log.info("Loading drone with ID: {} with {} medications", droneId, medications.size());
 
@@ -91,6 +99,7 @@ public class DroneServiceImpl implements DroneService {
      * @return list of loaded medications
      */
     @Override
+    @Cacheable(value = "medications", key = "#droneId")
     public List<Medication> getLoadedMedications(Long droneId) {
         log.info("Fetching loaded medications for drone ID: {}", droneId);
 
@@ -106,6 +115,7 @@ public class DroneServiceImpl implements DroneService {
      * @return paginated response of available drones
      */
     @Override
+    @Cacheable(value = "drones", key = "{#page, #size}")
     public  PageResponse<List<Drone>> getAvailableDrones(int pageNo, int pageSize) {
         log.info("Fetching available drones in IDLE state with battery of 25%)");
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
@@ -121,6 +131,7 @@ public class DroneServiceImpl implements DroneService {
      * @return paginated response of all drones
      */
     @Override
+    @Cacheable(value = "drones", key = "{#page, #size}")
     public PageResponse<List<Drone>> getDrones(int pageNo, int pageSize) {
         log.info("Fetching all drones");
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
