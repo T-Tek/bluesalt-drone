@@ -25,5 +25,5 @@ public interface DroneService {
 
     PageResponse<List<Drone>> getDrones(int pageNo, int pageSize);
 
-    int getBatteryLevel(Long droneId);
+    String getBatteryLevel(Long droneId);
 }

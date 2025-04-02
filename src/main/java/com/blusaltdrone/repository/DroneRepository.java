@@ -6,13 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface DroneRepository extends JpaRepository<Drone, Long> {
-    Optional<Drone> findBySerialNumber(String serialNumber);
-    List<Drone> findByState(DroneState state);
-
+    Optional<Drone> findById(Long id);
     Page<Drone> findByStateAndBatteryCapacityGreaterThanEqual(DroneState droneState, int i, Pageable pageable);
     Page<Drone> findAll(Pageable pageable);
 }

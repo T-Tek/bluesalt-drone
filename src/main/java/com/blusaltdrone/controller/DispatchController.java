@@ -67,7 +67,7 @@ public class DispatchController {
     @ApiResponse(responseCode = "200", description = "Success")
     @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<Response> getBatteryLevel(@PathVariable Long id) {
-        int batteryLevel = droneService.getBatteryLevel(id);
+        String batteryLevel = droneService.getBatteryLevel(id);
         return Utils.getResponse(ResponseCodeAndMessage.SUCCESS, batteryLevel);
     }
 

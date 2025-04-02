@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -147,12 +148,11 @@ public class DroneServiceImpl implements DroneService {
      * @return current battery percentage
      */
     @Override
-    public int getBatteryLevel(Long droneId) {
+    public String getBatteryLevel(Long droneId) {
         log.info("Fetching battery level for drone ID: {}", droneId);
 
-        return droneRepository.findById(droneId)
-                .map(Drone::getBatteryCapacity)
-                .orElseThrow(() -> new ResourceNotFoundException("Battery limit exceeded"));
+        Drone drone = droneRepository.findById(droneId).orElseThrow(() -> new ResourceNotFoundException("Drone not found with ID: " + droneId));
+        return String.format("Drone with ID %d has %d%% battery remaining", droneId, drone.getBatteryCapacity());
     }
 
     /**
