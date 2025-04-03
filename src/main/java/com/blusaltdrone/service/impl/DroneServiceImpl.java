@@ -77,6 +77,11 @@ public class DroneServiceImpl implements DroneService {
         Drone drone = droneRepository.findById(droneId)
                 .orElseThrow(() -> new ResourceNotFoundException("Drone not found"));
 
+        //we are preventing drone loading here if battery is below 25%
+        if (drone.getBatteryCapacity() < 25) {
+            throw new BadRequestException("Drone battery too low to load medications. Minimum required: 25%");
+        }
+
         Utils.doDroneCheck(drone);
 
         int totalWeight = 0;
