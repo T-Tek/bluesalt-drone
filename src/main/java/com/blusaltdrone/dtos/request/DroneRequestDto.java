@@ -4,11 +4,13 @@ import com.blusaltdrone.enums.DroneModel;
 import com.blusaltdrone.enums.DroneState;
 import jakarta.validation.constraints.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class DroneRequestDto {
 
     @NotBlank(message = "Serial number is required")
