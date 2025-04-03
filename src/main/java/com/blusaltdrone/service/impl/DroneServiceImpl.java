@@ -13,6 +13,7 @@ import com.blusaltdrone.model.Medication;
 import com.blusaltdrone.repository.DroneRepository;
 import com.blusaltdrone.service.DroneService;
 import com.blusaltdrone.utils.Utils;
+import com.blusaltdrone.utils.ValidationUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -43,6 +45,7 @@ public class DroneServiceImpl implements DroneService {
     @Transactional
     @Override
     public Drone registerDrone(DroneRequestDto droneRequest) {
+        ValidationUtils.validateNotNull(droneRequest, "Drone request");
         log.info("Registering a new drone with serial number: {}", droneRequest.getSerialNumber());
 
         Drone drone = DroneMapper.toDrone(droneRequest);
@@ -66,6 +69,9 @@ public class DroneServiceImpl implements DroneService {
             @CacheEvict(value = "battery", key = "#droneId")
     })
     public Drone loadDrone(Long droneId, List<MedicationRequestDto> medications) {
+        ValidationUtils.validateNotNull(droneId, "Drone ID");
+        ValidationUtils.validateNotEmpty(medications, "Medications list");
+
         log.info("Loading drone with ID: {} with {} medications", droneId, medications.size());
 
         Drone drone = droneRepository.findById(droneId)
@@ -102,6 +108,7 @@ public class DroneServiceImpl implements DroneService {
     @Override
     @Cacheable(value = "medications", key = "#droneId")
     public List<Medication> getLoadedMedications(Long droneId) {
+        ValidationUtils.validateNotNull(droneId, "Drone ID");
         log.info("Fetching loaded medications for drone ID: {}", droneId);
 
         Drone drone = droneRepository.findById(droneId)
@@ -116,8 +123,11 @@ public class DroneServiceImpl implements DroneService {
      * @return paginated response of available drones
      */
     @Override
-    @Cacheable(value = "drones", key = "{#page, #size}")
+    @Cacheable(value = "drones", key = "{#pageNo, #pageSize}")
     public  PageResponse<List<Drone>> getAvailableDrones(int pageNo, int pageSize) {
+        ValidationUtils.validatePositive(pageNo, "Page number");
+        ValidationUtils.validatePositive(pageSize, "Page size");
+
         log.info("Fetching available drones in IDLE state with battery of 25%)");
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
@@ -163,7 +173,7 @@ public class DroneServiceImpl implements DroneService {
      */
     private PageResponse<List<Drone>> getDronePageResponse(Page<Drone> dronePage) {
 
-        if (dronePage.isEmpty()) {
+        if (Objects.isNull(dronePage) || !dronePage.hasContent()) {
             throw new ResourceNotFoundException("No drones found");
         }
         return new PageResponse<>(
