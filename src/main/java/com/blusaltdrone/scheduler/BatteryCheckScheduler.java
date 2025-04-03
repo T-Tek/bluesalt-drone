@@ -17,7 +17,7 @@ public class BatteryCheckScheduler {
     private final DroneRepository droneRepository;
     private final BatteryCheckService batteryCheckService;
 
-    @Scheduled(fixedRateString = "${drone.battery.check.interval:3600000}")
+    @Scheduled(fixedRateString = "${drone.battery.check.interval}") //10 secs interval so it doesnt take much time
     public void performBatteryCheck() {
         List<Drone> drones = droneRepository.findAll();
         drones.forEach(batteryCheckService::logBatteryLevel);

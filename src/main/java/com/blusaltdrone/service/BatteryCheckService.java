@@ -17,7 +17,6 @@ public class BatteryCheckService {
 
     public void logBatteryLevel(Drone drone) {
         BatteryAuditLog logEntry = BatteryAuditLog.builder()
-                .id(drone.getId())
                 .drone(drone)
                 .batteryLevel(drone.getBatteryCapacity())
                 .timestamp(LocalDateTime.now())
